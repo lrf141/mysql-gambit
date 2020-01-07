@@ -1,0 +1,12 @@
+version: '3'
+services:
+    mysql:
+        image: mysql:8.0.18
+        environment:
+            - MYSQL_ALLOW_EMPTY_PASSWORD=1
+        volumes:
+            - ./docker/mysql/data:/var/lib/mysql
+            - ./docker/mysql/plugin:/usr/lib/mysql/plugin
+            - ./my.cnf:/etc/mysql/conf.d/my.cnf
+        ports:
+            - '3306:3306'

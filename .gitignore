@@ -33,4 +33,8 @@
 
 # mysql source code 
 mysql-8.0.18/
+
+docker/mysql/data/*
+docker/mysql/plugin/*
+
 !.gitkeep
