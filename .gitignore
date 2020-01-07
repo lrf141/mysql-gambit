@@ -30,3 +30,7 @@
 *.exe
 *.out
 *.app
+
+# mysql source code 
+mysql-8.0.18/
+!.gitkeep
