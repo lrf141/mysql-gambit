@@ -32,7 +32,10 @@
 *.app
 
 # mysql source code 
-mysql-8.0.18/
+mysql-8.0.18/*
+!mysql-8.0.18/storage
+mysql-8.0.18/storage/*
+!mysql-8.0.18/storage/gambit
 
 docker/mysql/data/*
 docker/mysql/plugin/*
