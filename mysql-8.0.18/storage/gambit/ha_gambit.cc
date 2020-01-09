@@ -888,8 +888,8 @@ mysql_declare_plugin(gambit){
     MYSQL_STORAGE_ENGINE_PLUGIN,
     &gambit_storage_engine,
     "GAMBIT",
-    "Brian Aker, MySQL AB",
-    "Gambit storage engine",
+    "lrf141",
+    "Gambit simple storage engine",
     PLUGIN_LICENSE_GPL,
     gambit_init_func, /* Plugin Init */
     NULL,              /* Plugin check uninstall */
