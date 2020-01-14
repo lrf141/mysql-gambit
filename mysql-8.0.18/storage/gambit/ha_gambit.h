@@ -53,6 +53,7 @@
 class Gambit_share : public Handler_share {
  public:
   THR_LOCK lock;
+  File table_file;
   Gambit_share();
   ~Gambit_share() { thr_lock_delete(&lock); }
 };
