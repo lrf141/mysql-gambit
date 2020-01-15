@@ -3,12 +3,19 @@
 
 storage/gambit/CMakeFiles/gambit.dir/ha_gambit.cc.o
  /home/lrf141/infraProject/mysql-gambit/mysql-8.0.18/storage/gambit/ha_gambit.cc
+ extra/rapidjson/include/rapidjson/fwd.h
+ extra/rapidjson/include/rapidjson/msinttypes/inttypes.h
+ extra/rapidjson/include/rapidjson/msinttypes/stdint.h
+ extra/rapidjson/include/rapidjson/rapidjson.h
+ include/big_endian.h
+ include/binlog_config.h
  include/compression.h
  include/decimal.h
  include/dur_prop.h
  include/field_types.h
  include/ft_global.h
  include/lex_string.h
+ include/little_endian.h
  include/m_ctype.h
  include/m_string.h
  include/map_helpers.h
@@ -16,6 +23,7 @@ storage/gambit/CMakeFiles/gambit.dir/ha_gambit.cc.o
  include/my_alloc.h
  include/my_base.h
  include/my_bitmap.h
+ include/my_byteorder.h
  include/my_command.h
  include/my_compiler.h
  include/my_compress.h
@@ -38,6 +46,7 @@ storage/gambit/CMakeFiles/gambit.dir/ha_gambit.cc.o
  include/my_thread.h
  include/my_thread_local.h
  include/my_thread_os_id.h
+ include/my_time.h
  include/mysql/com_data.h
  include/mysql/components/service.h
  include/mysql/components/services/my_io_bits.h
@@ -105,6 +114,7 @@ storage/gambit/CMakeFiles/gambit.dir/ha_gambit.cc.o
  include/mysql_time.h
  include/mysql_version.h
  include/mysqld_error.h
+ include/nullable.h
  include/pfs_cond_provider.h
  include/pfs_mutex_provider.h
  include/pfs_rwlock_provider.h
@@ -121,17 +131,32 @@ storage/gambit/CMakeFiles/gambit.dir/ha_gambit.cc.o
  include/thr_rwlock.h
  include/typelib.h
  include/violite.h
+ libbinlogevents/export/binary_log_funcs.h
+ libbinlogevents/include/table_id.h
  libbinlogevents/include/uuid.h
+ libbinlogevents/include/wrapper_functions.h
  sql/auth/auth_common.h
  sql/auth/auth_utility.h
  sql/auth/partial_revokes.h
  sql/auth/sql_security_ctx.h
  sql/current_thd.h
+ sql/dd/collection.h
  sql/dd/object_id.h
+ sql/dd/sdi_fwd.h
  sql/dd/string_type.h
+ sql/dd/types/column.h
+ sql/dd/types/entity_object.h
+ sql/dd/types/foreign_key.h
  sql/dd/types/object_table.h
+ sql/dd/types/weak_object.h
  sql/discrete_interval.h
+ sql/enum_query_type.h
+ sql/field.h
+ sql/filesort_utils.h
+ sql/gis/srid.h
  sql/handler.h
+ sql/json_binary.h
+ sql/json_dom.h
  sql/key.h
  sql/key_spec.h
  sql/locked_tables_list.h
@@ -139,11 +164,13 @@ storage/gambit/CMakeFiles/gambit.dir/ha_gambit.cc.o
  sql/mdl.h
  sql/mem_root_array.h
  sql/memroot_allocator.h
+ sql/my_decimal.h
  sql/opt_costconstants.h
  sql/opt_costmodel.h
  sql/opt_trace_context.h
  sql/psi_memory_key.h
  sql/query_options.h
+ sql/record_buffer.h
  sql/resourcegroups/platform/thread_attrs_api.h
  sql/resourcegroups/resource_group_basic_types.h
  sql/rpl_context.h
@@ -153,6 +180,8 @@ storage/gambit/CMakeFiles/gambit.dir/ha_gambit.cc.o
  sql/rpl_transaction_write_set_ctx.h
  sql/select_lex_visitor.h
  sql/session_tracker.h
+ sql/sql_array.h
+ sql/sql_bitmap.h
  sql/sql_class.h
  sql/sql_cmd.h
  sql/sql_connect.h
@@ -164,10 +193,12 @@ storage/gambit/CMakeFiles/gambit.dir/ha_gambit.cc.o
  sql/sql_plist.h
  sql/sql_plugin.h
  sql/sql_plugin_ref.h
+ sql/sql_sort.h
  sql/stateless_allocator.h
  sql/stream_cipher.h
  sql/sys_vars_resource_mgr.h
  sql/system_variables.h
+ sql/table.h
  sql/thr_malloc.h
  sql/transaction_info.h
  sql/xa.h

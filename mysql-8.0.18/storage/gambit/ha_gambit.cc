@@ -99,6 +99,8 @@
 #include "sql/sql_class.h"
 #include "sql/sql_plugin.h"
 #include "typelib.h"
+#include "sql/table.h"
+#include "sql/field.h"
 
 static handler *gambit_create_handler(handlerton *hton, TABLE_SHARE *table,
                                        bool partitioned, MEM_ROOT *mem_root);
@@ -227,6 +229,7 @@ int ha_gambit::open(const char *name, int, uint, const dd::Table *) {
   if (!(open_file = my_open(name, O_RDWR, MYF(0))))
       return 1;
   share->table_file = open_file;
+  share->name = name;
   return 0;
 }
 
@@ -280,14 +283,35 @@ int ha_gambit::close(void) {
   sql_insert.cc, sql_select.cc, sql_table.cc, sql_udf.cc and sql_update.cc
 */
 
-int ha_gambit::write_row(uchar *) {
+int ha_gambit::write_row(uchar *buf) {
   DBUG_TRACE;
-  /*
-    Gambit of a successful write_row. We don't store the data
-    anywhere; they are thrown away. A real implementation will
-    probably need to do something with 'buf'. We report a success
-    here, to pretend that the insert was successful.
-  */
+  ha_statistic_increment(&System_status_var::ha_write_count);
+  
+  share->write_file = my_open(share->name, O_RDWR | O_APPEND, MYF(0));
+
+  char att_buf[1024];
+  String attribute(att_buf, sizeof(att_buf), &my_charset_bin);
+  my_bitmap_map *org_bitmap = tmp_use_all_columns(table, table->read_set);
+  buffer.length(0);
+
+  for (Field **field = table->field; *field; field++) {
+    const char *p;
+    const char *end;
+    (*field)->val_str(&attribute, &attribute);
+    p = attribute.ptr();
+    end = attribute.length() + p;
+    buffer.append('"');
+    for (; p < end; p++)
+        buffer.append(*p);
+    buffer.append('"');
+    buffer.append(',');
+  }
+  buffer.length(buffer.length() - 1);
+  buffer.append('\n');
+  tmp_restore_column_map(table->read_set, org_bitmap);
+  int size = buffer.length();
+  my_write(share->write_file, (uchar *)buffer.ptr(), size, MYF(0));
+
   return 0;
 }
 

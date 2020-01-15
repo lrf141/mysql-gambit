@@ -45,6 +45,7 @@
 #include "my_inttypes.h"
 #include "sql/handler.h" /* handler */
 #include "thr_lock.h"    /* THR_LOCK, THR_LOCK_DATA */
+#include "sql_string.h"
 
 /** @brief
   Gambit_share is a class that will be shared among all open handlers.
@@ -53,7 +54,9 @@
 class Gambit_share : public Handler_share {
  public:
   THR_LOCK lock;
+  const char *name;
   File table_file;
+  File write_file;
   Gambit_share();
   ~Gambit_share() { thr_lock_delete(&lock); }
 };
@@ -65,6 +68,7 @@ class ha_gambit : public handler {
   THR_LOCK_DATA lock;          ///< MySQL lock
   Gambit_share *share;        ///< Shared lock info
   Gambit_share *get_share();  ///< Get the share
+  String buffer;
 
  public:
   ha_gambit(handlerton *hton, TABLE_SHARE *table_arg);
