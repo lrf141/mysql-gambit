@@ -69,6 +69,7 @@ class ha_gambit : public handler {
   Gambit_share *share;        ///< Shared lock info
   Gambit_share *get_share();  ///< Get the share
   String buffer;
+  off_t current_position;
 
  public:
   ha_gambit(handlerton *hton, TABLE_SHARE *table_arg);
@@ -254,6 +255,7 @@ class ha_gambit : public handler {
   int rnd_init(bool scan);  // required
   int rnd_end();
   int rnd_next(uchar *buf);             ///< required
+  int find_current_row(uchar *buf);
   int rnd_pos(uchar *buf, uchar *pos);  ///< required
   void position(const uchar *record);   ///< required
   int info(uint);                       ///< required

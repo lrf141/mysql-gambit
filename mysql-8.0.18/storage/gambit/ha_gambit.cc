@@ -283,7 +283,7 @@ int ha_gambit::close(void) {
   sql_insert.cc, sql_select.cc, sql_table.cc, sql_udf.cc and sql_update.cc
 */
 
-int ha_gambit::write_row(uchar *buf) {
+int ha_gambit::write_row(uchar *) {
   DBUG_TRACE;
   ha_statistic_increment(&System_status_var::ha_write_count);
   
@@ -457,6 +457,10 @@ int ha_gambit::index_last(uchar *) {
 */
 int ha_gambit::rnd_init(bool) {
   DBUG_TRACE;
+  
+  current_position = 0;
+  stats.records = 0;
+  
   return 0;
 }
 
@@ -480,11 +484,56 @@ int ha_gambit::rnd_end() {
   filesort.cc, records.cc, sql_handler.cc, sql_select.cc, sql_table.cc and
   sql_update.cc
 */
-int ha_gambit::rnd_next(uchar *) {
-  int rc;
+int ha_gambit::rnd_next(uchar *buf) {
   DBUG_TRACE;
-  rc = HA_ERR_END_OF_FILE;
-  return rc;
+  int err;
+
+  ha_statistic_increment(&System_status_var::ha_read_rnd_next_count);
+  err = find_current_row(buf);
+  if (!err) 
+      stats.records++;
+  return err;
+}
+
+int ha_gambit::find_current_row(uchar *buf) {
+  DBUG_TRACE;
+
+  my_bitmap_map *org_bitmap = tmp_use_all_columns(table, table->write_set);
+  uchar read_buf[IO_SIZE];
+  bool is_end;
+  uchar *p;
+  uchar current_char;
+  uint bytes_read;
+
+  memset(buf, 0, table->s->null_bytes);
+  for (Field **field = table->field; *field; field++) {
+    bytes_read = my_pread(share->table_file, read_buf, sizeof(read_buf), current_position, MYF(0));
+    if (!bytes_read) {
+      tmp_restore_column_map(table->write_set, org_bitmap);
+      return HA_ERR_END_OF_FILE;
+    }
+    p = read_buf;
+    current_char = *p;
+    buffer.length(0);
+    is_end = false;
+
+    for (;;) {
+      if (current_char == '"') {
+        if (is_end) {
+          current_position += 2;
+          break;
+        }
+        is_end = true;
+      } else {
+        buffer.append(current_char);
+      }
+      current_char = *++p;
+      current_position++;
+    }
+    (*field)->store(buffer.ptr(), buffer.length(), buffer.charset());
+  }
+  tmp_restore_column_map(table->write_set, org_bitmap);
+  return 0; 
 }
 
 /**
@@ -571,6 +620,8 @@ int ha_gambit::rnd_pos(uchar *, uchar *) {
 */
 int ha_gambit::info(uint) {
   DBUG_TRACE;
+  if (stats.records < 2)
+      stats.records = 2;
   return 0;
 }
 
